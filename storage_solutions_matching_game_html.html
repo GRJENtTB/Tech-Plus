@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Storage Solutions Matching Game</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+    header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 8px; font-size: 2rem; }
+    header p { margin: 0; font-size: 1rem; }
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px 32px;
+    }
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .badge {
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: bold;
+    }
+    .game-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 800px) {
+      .game-grid { grid-template-columns: 1fr; }
+    }
+    .card-bank, .drop-bank {
+      height: 460px;
+      overflow-y: auto;
+    }
+    h2 { margin-top: 0; }
+    .term-card {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 10px 0;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .term-card:hover {
+      transform: scale(1.02);
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: #e5e7eb;
+      display: grid;
+      place-items: center;
+      font-size: 1.45rem;
+      flex-shrink: 0;
+    }
+    .drop-zone {
+      border: 2px dashed #94a3b8;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 10px 0;
+      min-height: 84px;
+      background: #f8fafc;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .drop-zone strong { display: block; margin-bottom: 6px; }
+    .drop-zone.over {
+      background: #dcfce7;
+      border-color: #16a34a;
+    }
+    .drop-zone.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+    }
+    .drop-zone.incorrect {
+      background: #fee2e2;
+      border-color: #ef4444;
+    }
+    .small {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      margin: 6px;
+    }
+    button.secondary { background: #475569; }
+    button.success { background: #16a34a; }
+    button.warning { background: #ea580c; }
+    .feedback {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+    .hidden { display: none; }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin: 8px 0;
+      background: #f1f5f9;
+      color: #1f2937;
+      border: 1px solid #cbd5e1;
+    }
+    .quiz-option:hover { background: #dbeafe; }
+    .note {
+      border-left: 5px solid #2563eb;
+      background: #eff6ff;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🗄️ Storage Solutions Matching Game</h1>
+    <p>Match each storage solution to its correct Tech+ exam-aligned description.</p>
+  </header>
+
+  <main>
+    <section class="panel stats">
+      <span class="badge">Score: <span id="score">0</span></span>
+      <span class="badge">Matches: <span id="matches">0</span>/8</span>
+      <span class="badge">Topic: NAS • RAID • File Servers • Cloud</span>
+      <div>
+        <button onclick="resetGame()" class="secondary">Reset Game</button>
+        <button onclick="showQuiz()" class="success">Start Quick Quiz</button>
+        <button onclick="showAnswers()" class="warning">Show Answers</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <strong>Goal:</strong> Review common storage solutions and configurations used to store, protect, and access data.
+      <div class="note">Tech+ focus: local network storage, NAS, file server, cloud storage service, RAID, redundancy, and fault tolerance.</div>
+    </section>
+
+    <section id="matchGame" class="game-grid">
+      <div class="panel card-bank">
+        <h2>Terms</h2>
+        <p class="small">Drag each term to the best description.</p>
+        <div id="cards"></div>
+      </div>
+
+      <div class="panel drop-bank">
+        <h2>Descriptions</h2>
+        <p class="small">Drop the matching term here.</p>
+        <div id="zones"></div>
+        <div id="feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <section id="quiz" class="panel hidden">
+      <h2>Quick Quiz</h2>
+      <p id="quizQuestion"></p>
+      <div id="quizOptions"></div>
+      <div id="quizFeedback" class="feedback"></div>
+      <button onclick="nextQuestion()">Next Question</button>
+      <button onclick="showMatchGame()" class="secondary">Back to Matching Game</button>
+    </section>
+  </main>
+
+  <script>
+    const terms = [
+      { id: "nas", name: "NAS", icon: "📦", desc: "A storage device with a network port and built-in OS that allows users to access files over a network." },
+      { id: "raid", name: "RAID", icon: "🧩", desc: "A storage configuration that uses multiple drives to improve performance, redundancy, or fault tolerance." },
+      { id: "file-server", name: "File Server", icon: "🗂️", desc: "A server that stores files in one central location and controls user access to those files." },
+      { id: "cloud", name: "Cloud Storage", icon: "☁️", desc: "A storage service that allows data to be stored and accessed through the Internet." },
+      { id: "raid0", name: "RAID 0", icon: "⚡", desc: "Uses striping to split data across drives for speed, but does not provide redundancy." },
+      { id: "raid1", name: "RAID 1", icon: "🪞", desc: "Uses mirroring to store identical copies of data on multiple drives." },
+      { id: "raid5", name: "RAID 5", icon: "🛡️", desc: "Uses striping with single parity so data can be rebuilt if one drive fails." },
+      { id: "redundancy", name: "Redundancy", icon: "🔁", desc: "Extra copies or recovery information that help keep data available if hardware fails." }
+    ];
+
+    const quizQuestions = [
+      { q: "Which storage solution is accessed over a network and often contains multiple drives?", options: ["RAM", "NAS", "GPU", "USB-C"], answer: "NAS" },
+      { q: "Which RAID level provides speed but no redundancy?", options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], answer: "RAID 0" },
+      { q: "Which RAID level mirrors data?", options: ["RAID 0", "RAID 1", "Cloud Storage", "File Server"], answer: "RAID 1" },
+      { q: "Which solution stores files in a central location and manages access permissions?", options: ["File Server", "Thermal Printer", "CPU", "HDMI"], answer: "File Server" },
+      { q: "Which storage option allows access to data through the Internet?", options: ["Cloud Storage", "BIOS", "VGA", "RAM"], answer: "Cloud Storage" },
+      { q: "RAID provides redundancy, but what is still important to remember?", options: ["RAID replaces all drivers", "RAID is not a backup", "RAID only works with printers", "RAID is only for RAM"], answer: "RAID is not a backup" }
+    ];
+
+    let score = 0;
+    let matches = 0;
+    let currentQuestion = 0;
+
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function renderGame() {
+      const cardBox = document.getElementById("cards");
+      const zoneBox = document.getElementById("zones");
+      cardBox.innerHTML = "";
+      zoneBox.innerHTML = "";
+
+      shuffle(terms).forEach(item => {
+        const card = document.createElement("div");
+        card.className = "term-card";
+        card.draggable = true;
+        card.id = item.id;
+        card.innerHTML = `<div class="icon">${item.icon}</div><div><strong>${item.name}</strong><br><span class="small">Drag me</span></div>`;
+        card.addEventListener("dragstart", dragStart);
+        cardBox.appendChild(card);
+      });
+
+      shuffle(terms).forEach(item => {
+        const zone = document.createElement("div");
+        zone.className = "drop-zone";
+        zone.dataset.answer = item.id;
+        zone.innerHTML = `<strong>${item.desc}</strong><span class="small">Drop term here</span>`;
+        zone.addEventListener("dragover", dragOver);
+        zone.addEventListener("dragleave", dragLeave);
+        zone.addEventListener("drop", dropCard);
+        zoneBox.appendChild(zone);
+      });
+    }
+
+    function dragStart(e) {
+      e.dataTransfer.setData("text/plain", e.target.closest(".term-card").id);
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add("over");
+    }
+
+    function dragLeave(e) {
+      e.currentTarget.classList.remove("over");
+    }
+
+    function dropCard(e) {
+      e.preventDefault();
+      const cardId = e.dataTransfer.getData("text/plain");
+      const zone = e.currentTarget;
+      zone.classList.remove("over");
+
+      if (zone.dataset.answer === cardId) {
+        const card = document.getElementById(cardId);
+        zone.classList.add("correct");
+        zone.classList.remove("incorrect");
+        zone.appendChild(card);
+        card.draggable = false;
+        card.style.cursor = "default";
+        score += 10;
+        matches += 1;
+        document.getElementById("feedback").textContent = "Correct! Great match.";
+      } else {
+        zone.classList.add("incorrect");
+        score = Math.max(0, score - 2);
+        document.getElementById("feedback").textContent = "Try again. Think about the main purpose of the term.";
+        setTimeout(() => zone.classList.remove("incorrect"), 800);
+      }
+
+      updateStats();
+      if (matches === terms.length) {
+        document.getElementById("feedback").textContent = "Excellent! You matched all storage solutions.";
+      }
+    }
+
+    function updateStats() {
+      document.getElementById("score").textContent = score;
+      document.getElementById("matches").textContent = matches;
+    }
+
+    function resetGame() {
+      score = 0;
+      matches = 0;
+      document.getElementById("feedback").textContent = "";
+      updateStats();
+      renderGame();
+      showMatchGame();
+    }
+
+    function showAnswers() {
+      alert(terms.map(item => `${item.name}: ${item.desc}`).join("\n\n"));
+    }
+
+    function showQuiz() {
+      document.getElementById("matchGame").classList.add("hidden");
+      document.getElementById("quiz").classList.remove("hidden");
+      currentQuestion = 0;
+      renderQuestion();
+    }
+
+    function showMatchGame() {
+      document.getElementById("quiz").classList.add("hidden");
+      document.getElementById("matchGame").classList.remove("hidden");
+    }
+
+    function renderQuestion() {
+      const item = quizQuestions[currentQuestion];
+      document.getElementById("quizQuestion").textContent = item.q;
+      document.getElementById("quizFeedback").textContent = "";
+      const optionsBox = document.getElementById("quizOptions");
+      optionsBox.innerHTML = "";
+
+      item.options.forEach(option => {
+        const button = document.createElement("button");
+        button.className = "quiz-option";
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option);
+        optionsBox.appendChild(button);
+      });
+    }
+
+    function checkAnswer(option) {
+      const item = quizQuestions[currentQuestion];
+      const feedback = document.getElementById("quizFeedback");
+      if (option === item.answer) {
+        feedback.textContent = "Correct!";
+        score += 5;
+      } else {
+        feedback.textContent = `Not quite. Correct answer: ${item.answer}`;
+      }
+      updateStats();
+    }
+
+    function nextQuestion() {
+      currentQuestion = (currentQuestion + 1) % quizQuestions.length;
+      renderQuestion();
+    }
+
+    renderGame();
+  </script>
+</body>
+</html>
