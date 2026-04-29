@@ -19,314 +19,169 @@
       margin: 0;
       background: #eef2ff;
       color: var(--text);
+      height: 100vh;
+      overflow: hidden;
     }
 
     header {
       background: var(--primary);
       color: white;
-      padding: 24px;
+      padding: 16px;
       text-align: center;
     }
 
     main {
-      max-width: 950px;
-      margin: 24px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 16px;
+      height: calc(100vh - 120px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     h1, h2 {
-      margin-top: 0;
+      margin: 0;
     }
 
     .instructions {
       background: var(--light);
       border-left: 6px solid var(--primary);
-      padding: 16px;
-      margin-bottom: 20px;
+      padding: 12px;
       border-radius: 8px;
+      font-size: 0.95rem;
     }
 
     .activity-area {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 16px;
+      flex: 1;
+      overflow: hidden;
     }
 
     .bank, .ladder {
       border: 2px dashed var(--border);
-      padding: 16px;
+      padding: 12px;
       border-radius: 12px;
-      min-height: 320px;
       background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
     }
 
     .bank h2, .ladder h2 {
-      font-size: 1.2rem;
+      font-size: 1rem;
       text-align: center;
+      margin-bottom: 8px;
     }
 
     .unit-card {
       background: white;
       border: 2px solid var(--border);
       border-radius: 10px;
-      padding: 14px;
-      margin: 10px 0;
+      padding: 10px;
+      margin: 6px 0;
       cursor: grab;
       font-weight: bold;
       text-align: center;
       user-select: none;
     }
 
-    .unit-card:active {
-      cursor: grabbing;
-    }
-
     .slot {
       background: white;
       border: 2px dashed var(--border);
       border-radius: 10px;
-      min-height: 52px;
-      margin: 10px 0;
-      padding: 8px;
+      min-height: 45px;
+      margin: 6px 0;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .slot-label {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: #64748b;
-      margin-bottom: 4px;
     }
 
     .slot-wrapper {
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .buttons {
-      margin-top: 24px;
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 10px;
       justify-content: center;
     }
 
     button {
       border: none;
-      padding: 12px 18px;
-      border-radius: 10px;
+      padding: 10px 16px;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.9rem;
     }
 
-    .check-btn {
-      background: var(--success);
-      color: white;
-    }
-
-    .reset-btn {
-      background: var(--danger);
-      color: white;
-    }
-
-    .print-btn {
-      background: var(--primary);
-      color: white;
-    }
+    .check-btn { background: var(--success); color: white; }
+    .reset-btn { background: var(--danger); color: white; }
 
     #feedback {
       text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-top: 18px;
-    }
-
-    .correct {
-      border-color: var(--success);
-      background: #dcfce7;
-    }
-
-    .incorrect {
-      border-color: var(--danger);
-      background: #fee2e2;
-    }
-
-    .print-section {
-      margin-top: 40px;
-      padding-top: 24px;
-      border-top: 3px solid var(--border);
-    }
-
-    .worksheet-box {
-      border: 2px solid #000;
-      padding: 18px;
-      margin: 16px 0;
-    }
-
-    .number-line {
-      display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 10px;
-      margin: 12px 0;
-      align-items: center;
-    }
-
-    .blank {
-      border-bottom: 2px solid #000;
-      height: 28px;
-    }
-
-    .cut-outs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .cut-card {
-      border: 2px dashed #000;
-      padding: 14px;
-      text-align: center;
+      font-size: 1rem;
       font-weight: bold;
     }
+
+    .correct { border-color: var(--success); background: #dcfce7; }
+    .incorrect { border-color: var(--danger); background: #fee2e2; }
 
     @media (max-width: 750px) {
-      .activity-area {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media print {
-      header, .activity-area, .buttons, #feedback, .instructions .online-only {
-        display: none;
-      }
-
-      body {
-        background: white;
-      }
-
-      main {
-        box-shadow: none;
-        margin: 0;
-        max-width: none;
-      }
-
-      .print-section {
-        border-top: none;
-        margin-top: 0;
-      }
+      body { overflow: auto; }
+      main { height: auto; }
+      .activity-area { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Storage Unit Ladder</h1>
-    <p>Arrange digital storage units from smallest to largest.</p>
+    <p>Arrange storage units from smallest to largest</p>
   </header>
 
   <main>
     <section class="instructions">
-      <h2>Student Directions</h2>
-      <p class="online-only">
-        Drag each storage unit into the ladder. Put the smallest unit at the top and the largest unit at the bottom.
-      </p>
-      <p>
-        Correct order: smallest storage unit first, largest storage unit last.
-      </p>
+      Place each storage unit onto the ladder, starting with the smallest at the top and ending with the largest at the bottom.
     </section>
 
     <section class="activity-area">
       <div class="bank" id="unitBank">
-        <h2>Storage Unit Bank</h2>
-        <div class="unit-card" draggable="true" data-unit="Terabyte">Terabyte</div>
-        <div class="unit-card" draggable="true" data-unit="Kilobyte">Kilobyte</div>
-        <div class="unit-card" draggable="true" data-unit="Petabyte">Petabyte</div>
-        <div class="unit-card" draggable="true" data-unit="Byte">Byte</div>
-        <div class="unit-card" draggable="true" data-unit="Megabyte">Megabyte</div>
-        <div class="unit-card" draggable="true" data-unit="Gigabyte">Gigabyte</div>
+        <h2>Bank</h2>
+        <div class="unit-card" draggable="true" data-unit="Terabyte">Terabyte (TB)</div>
+        <div class="unit-card" draggable="true" data-unit="Kilobyte">Kilobyte (KB)</div>
+        <div class="unit-card" draggable="true" data-unit="Petabyte">Petabyte (PB)</div>
+        <div class="unit-card" draggable="true" data-unit="Byte">Byte (B)</div>
+        <div class="unit-card" draggable="true" data-unit="Megabyte">Megabyte (MB)</div>
+        <div class="unit-card" draggable="true" data-unit="Gigabyte">Gigabyte (GB)</div>
       </div>
 
       <div class="ladder">
-        <h2>Storage Ladder</h2>
+        <h2>Ladder</h2>
 
-        <div class="slot-wrapper">
-          <div class="slot-label">1. Smallest</div>
-          <div class="slot" data-position="0"></div>
-        </div>
-
-        <div class="slot-wrapper">
-          <div class="slot-label">2.</div>
-          <div class="slot" data-position="1"></div>
-        </div>
-
-        <div class="slot-wrapper">
-          <div class="slot-label">3.</div>
-          <div class="slot" data-position="2"></div>
-        </div>
-
-        <div class="slot-wrapper">
-          <div class="slot-label">4.</div>
-          <div class="slot" data-position="3"></div>
-        </div>
-
-        <div class="slot-wrapper">
-          <div class="slot-label">5.</div>
-          <div class="slot" data-position="4"></div>
-        </div>
-
-        <div class="slot-wrapper">
-          <div class="slot-label">6. Largest</div>
-          <div class="slot" data-position="5"></div>
-        </div>
+        <div class="slot-wrapper"><div class="slot-label">1</div><div class="slot" data-position="0"></div></div>
+        <div class="slot-wrapper"><div class="slot-label">2</div><div class="slot" data-position="1"></div></div>
+        <div class="slot-wrapper"><div class="slot-label">3</div><div class="slot" data-position="2"></div></div>
+        <div class="slot-wrapper"><div class="slot-label">4</div><div class="slot" data-position="3"></div></div>
+        <div class="slot-wrapper"><div class="slot-label">5</div><div class="slot" data-position="4"></div></div>
+        <div class="slot-wrapper"><div class="slot-label">6</div><div class="slot" data-position="5"></div></div>
       </div>
     </section>
 
     <section class="buttons">
-      <button class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      <button class="check-btn" onclick="checkAnswers()">Check</button>
       <button class="reset-btn" onclick="resetActivity()">Reset</button>
-      <button class="print-btn" onclick="window.print()">Print PDF Worksheet</button>
     </section>
 
     <div id="feedback"></div>
-
-    <section class="print-section">
-      <h2>Printable PDF / Cut-and-Paste Version</h2>
-      <p><strong>Name:</strong> ___________________________ <strong>Date:</strong> _______________</p>
-      <p>Directions: Number the storage units from smallest to largest, or cut out the cards and paste them in the correct order.</p>
-
-      <div class="worksheet-box">
-        <h3>Storage Ladder</h3>
-        <div class="number-line"><strong>1.</strong><div class="blank"></div></div>
-        <div class="number-line"><strong>2.</strong><div class="blank"></div></div>
-        <div class="number-line"><strong>3.</strong><div class="blank"></div></div>
-        <div class="number-line"><strong>4.</strong><div class="blank"></div></div>
-        <div class="number-line"><strong>5.</strong><div class="blank"></div></div>
-        <div class="number-line"><strong>6.</strong><div class="blank"></div></div>
-      </div>
-
-      <h3>Cut-Out Cards</h3>
-      <div class="cut-outs">
-        <div class="cut-card">Terabyte</div>
-        <div class="cut-card">Kilobyte</div>
-        <div class="cut-card">Petabyte</div>
-        <div class="cut-card">Byte</div>
-        <div class="cut-card">Megabyte</div>
-        <div class="cut-card">Gigabyte</div>
-      </div>
-
-      <div class="worksheet-box">
-        <h3>Reflection Question</h3>
-        <p>Which unit is the smallest: Petabyte, Terabyte, Kilobyte, or Megabyte?</p>
-        <p>Answer: ___________________________________________</p>
-        <p>Explain how you know:</p>
-        <p>__________________________________________________________________</p>
-        <p>__________________________________________________________________</p>
-      </div>
-    </section>
   </main>
 
   <script>
@@ -346,13 +201,10 @@
     });
 
     document.querySelectorAll(".slot, .bank").forEach(dropZone => {
-      dropZone.addEventListener("dragover", event => {
-        event.preventDefault();
-      });
+      dropZone.addEventListener("dragover", event => event.preventDefault());
 
       dropZone.addEventListener("drop", event => {
         event.preventDefault();
-
         if (!draggedCard) return;
 
         if (dropZone.classList.contains("slot")) {
@@ -395,13 +247,13 @@
       const feedback = document.getElementById("feedback");
 
       if (!completed) {
-        feedback.textContent = "Some spaces are empty. Place all storage units before checking.";
+        feedback.textContent = "Fill all spaces first.";
         feedback.style.color = "#dc2626";
       } else if (score === correctOrder.length) {
-        feedback.textContent = "Correct! The order is Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte.";
+        feedback.textContent = "Correct!";
         feedback.style.color = "#16a34a";
       } else {
-        feedback.textContent = `You got ${score} out of ${correctOrder.length} correct. Try again!`;
+        feedback.textContent = `Score: ${score}/6`;
         feedback.style.color = "#dc2626";
       }
     }
@@ -409,10 +261,8 @@
     function resetActivity() {
       const bank = document.getElementById("unitBank");
       const cards = Array.from(document.querySelectorAll(".unit-card"));
-
       cards.sort(() => Math.random() - 0.5);
       cards.forEach(card => bank.appendChild(card));
-
       clearFeedbackStyles();
       document.getElementById("feedback").textContent = "";
     }
