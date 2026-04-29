@@ -240,7 +240,8 @@
     }
 
     function dragStart(e) {
-      e.dataTransfer.setData("text/plain", e.target.id);
+      const card = e.target.closest('.connector-card');
+      e.dataTransfer.setData("text/plain", card.id);
     }
 
     function dragOver(e) {
@@ -282,7 +283,6 @@
     }
 
     function updateStats() {
-      document.getElementById("score").textContent = score;
       document.getElementById("matches").textContent = matches;
     }
 
