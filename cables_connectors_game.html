@@ -146,18 +146,16 @@
 <body>
   <header>
     <h1>🔌 Cables & Connectors Match Game</h1>
-    <p>Match each connector to its best use. Great practice for Tech+ cable and interface topics.</p>
+    <p>Match each connector with the appropriate description.</p>
   </header>
 
   <main>
     <section class="panel stats">
-      <span class="badge">Score: <span id="score">0</span></span>
       <span class="badge">Matches: <span id="matches">0</span>/8</span>
       <span class="badge">Mode: Drag & Match</span>
       <div>
         <button onclick="resetGame()" class="secondary">Reset Game</button>
-        <button onclick="showQuiz()" class="success">Start Quick Quiz</button>
-      </div>
+        </div>
     </section>
 
     <section id="matchGame" class="game-grid">
@@ -192,17 +190,17 @@
       { id: "hdmi", name: "HDMI", icon: "📺", desc: "Carries digital audio and video, commonly used with TVs, monitors, and game consoles." },
       { id: "displayport", name: "DisplayPort", icon: "🖥️", desc: "Digital audio/video connector commonly used with PCs and monitors." },
       { id: "vga", name: "VGA", icon: "🔵", desc: "Older 15-pin display connector that sends analog video only." },
-      { id: "rj45", name: "RJ-45", icon: "🌐", desc: "Registered Jack connector commonly used for Ethernet networking." },
-      { id: "fiber", name: "Fiber Optic", icon: "💡", desc: "Uses light signals through glass or plastic fibers for fast data transmission." },
+      { id: "dvi", name: "DVI", icon: "🧱", desc: "A legacy video interface designed to handle digital and analog signals." },
+      { id: "thunderbolt", name: "Thunderbolt", icon: "⚡", desc: "High-speed interface that carries data, video, and power; often uses the USB-C connector." },
       { id: "lightning", name: "Lightning", icon: "🍎", desc: "Proprietary Apple connector used for charging, data, and audio on older Apple devices." }
     ];
 
     const quizQuestions = [
-      { q: "Which connector is commonly used for Ethernet networking?", options: ["HDMI", "RJ-45", "VGA", "Lightning"], answer: "RJ-45" },
-      { q: "Which cable type uses light to transmit data?", options: ["Fiber Optic", "VGA", "USB-A", "DVI"], answer: "Fiber Optic" },
-      { q: "Which connector is reversible and commonly used on modern devices?", options: ["USB-C", "VGA", "RJ-11", "SATA"], answer: "USB-C" },
-      { q: "Which connector carries digital audio and video and is common on TVs?", options: ["VGA", "HDMI", "RJ-45", "Serial"], answer: "HDMI" },
-      { q: "Which connector sends analog video only?", options: ["VGA", "USB-C", "DisplayPort", "HDMI"], answer: "VGA" }
+      { q: "Which connector carries digital audio and video and is common on TVs?", options: ["VGA", "HDMI", "DVI", "Serial"], answer: "HDMI" },
+      { q: "Which connector is reversible and commonly used on modern devices?", options: ["USB-C", "VGA", "DVI", "SATA"], answer: "USB-C" },
+      { q: "Which connector sends analog video only?", options: ["VGA", "USB-C", "DisplayPort", "HDMI"], answer: "VGA" },
+      { q: "Which connector is primarily used for digital video on older monitors?", options: ["DVI", "USB", "RJ-11", "PS/2"], answer: "DVI" },
+      { q: "Which interface can carry data, video, and power at high speeds using a USB-C port?", options: ["Thunderbolt", "VGA", "DVI", "Serial"], answer: "Thunderbolt" }
     ];
 
     let score = 0;
