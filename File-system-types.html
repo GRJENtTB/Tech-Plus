@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>File System and File Type Challenge</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; background: #f7f9fb; color: #1f2937; }
+header { background: #2f6b2f; color: white; text-align: center; padding: 30px 20px; }
+main { max-width: 900px; margin: 0 auto; padding: 24px; }
+.activity { background: white; border: 1px solid #d1d5db; border-radius: 14px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+h2 { color: #2f6b2f; margin-top: 0; }
+.directions { background: #eaf5ea; border-left: 5px solid #2f6b2f; padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+.question { border-top: 1px solid #e5e7eb; padding: 16px 0; }
+.question:first-of-type { border-top: none; }
+.options label { display: block; margin: 8px 0; padding: 9px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; }
+.button-row { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+button { border: none; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer; color: white; background: #2f6b2f; }
+button.secondary { background: #4b5563; }
+.score { margin-top: 16px; font-size: 1.1rem; font-weight: bold; }
+footer { text-align: center; color: #6b7280; padding: 24px; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>File System and File Type Challenge</h1>
+  <p>File Systems, File Extensions, and File Management</p>
+</header>
+
+<main>
+  <section class="activity" id="activity4">
+    <h2>Activity: File System and File Type Challenge</h2>
+
+    <div class="directions">
+      Choose the best answer for each question. This activity focuses on file systems, file extensions, compressed files, and file naming best practices.
+    </div>
+
+    <div id="question-container">
+      <div class="question">
+        <p><strong>1. Which file system is the default file system for Windows?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q1" value="FAT32"> FAT32</label>
+          <label><input type="radio" name="q1" value="NTFS" data-correct="true"> NTFS</label>
+          <label><input type="radio" name="q1" value="APFS"> APFS</label>
+          <label><input type="radio" name="q1" value="ext4"> ext4</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>2. Which file system is widely used in Linux?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q2" value="FAT32"> FAT32</label>
+          <label><input type="radio" name="q2" value="UDF"> UDF</label>
+          <label><input type="radio" name="q2" value="ext4" data-correct="true"> ext4</label>
+          <label><input type="radio" name="q2" value="APFS"> APFS</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>3. Which file system is used by macOS?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q3" value="APFS" data-correct="true"> APFS</label>
+          <label><input type="radio" name="q3" value="NTFS"> NTFS</label>
+          <label><input type="radio" name="q3" value="UDF"> UDF</label>
+          <label><input type="radio" name="q3" value="FAT32"> FAT32</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>4. Which file system is used on DVDs and Blu-ray discs?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q4" value="exFAT"> exFAT</label>
+          <label><input type="radio" name="q4" value="ext4"> ext4</label>
+          <label><input type="radio" name="q4" value="UDF" data-correct="true"> UDF</label>
+          <label><input type="radio" name="q4" value="APFS"> APFS</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>5. Which file extension is commonly used for a compressed archive?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q5" value=".docx"> .docx</label>
+          <label><input type="radio" name="q5" value=".mp3"> .mp3</label>
+          <label><input type="radio" name="q5" value=".zip" data-correct="true"> .zip</label>
+          <label><input type="radio" name="q5" value=".exe"> .exe</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>6. Which file extension is commonly used for a Windows program?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q6" value=".jpg"> .jpg</label>
+          <label><input type="radio" name="q6" value=".exe" data-correct="true"> .exe</label>
+          <label><input type="radio" name="q6" value=".txt"> .txt</label>
+          <label><input type="radio" name="q6" value=".wav"> .wav</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>7. Which option is an example of a document file extension?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q7" value=".mp4"> .mp4</label>
+          <label><input type="radio" name="q7" value=".png"> .png</label>
+          <label><input type="radio" name="q7" value=".docx" data-correct="true"> .docx</label>
+          <label><input type="radio" name="q7" value=".app"> .app</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>8. Which option is an example of an image file extension?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q8" value=".jpg" data-correct="true"> .jpg</label>
+          <label><input type="radio" name="q8" value=".pdf"> .pdf</label>
+          <label><input type="radio" name="q8" value=".bat"> .bat</label>
+          <label><input type="radio" name="q8" value=".zip"> .zip</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>9. What does a file extension help the operating system determine?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q9" value="Which application should open the file" data-correct="true"> Which application should open the file</label>
+          <label><input type="radio" name="q9" value="The user account password"> The user account password</label>
+          <label><input type="radio" name="q9" value="The amount of RAM installed"> The amount of RAM installed</label>
+          <label><input type="radio" name="q9" value="The computer manufacturer"> The computer manufacturer</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <p><strong>10. Which filename follows a clear file naming best practice?</strong></p>
+        <div class="options">
+          <label><input type="radio" name="q10" value="document1.docx"> document1.docx</label>
+          <label><input type="radio" name="q10" value="image###.png"> image###.png</label>
+          <label><input type="radio" name="q10" value="Mission_Report_2026-05-15.docx" data-correct="true"> Mission_Report_2026-05-15.docx</label>
+          <label><input type="radio" name="q10" value="file?.txt"> file?.txt</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button onclick="checkAnswers()">Check Answers</button>
+      <button class="secondary" onclick="resetAnswers()">Reset</button>
+    </div>
+
+    <div class="score" id="score"></div>
+  </section>
+</main>
+
+<footer>
+  File System and File Type Challenge
+</footer>
+
+<script>
+function shuffleQuestions() {
+  const container = document.getElementById('question-container');
+  const questions = Array.from(container.querySelectorAll('.question'));
+
+  for (let i = questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+
+  questions.forEach((question, index) => {
+    const strong = question.querySelector('strong');
+    strong.textContent = strong.textContent.replace(/^\d+\.\s*/, (index + 1) + '. ');
+    container.appendChild(question);
+  });
+}
+
+function checkAnswers() {
+  const groups = new Set();
+  document.querySelectorAll('input[type="radio"]').forEach(input => {
+    groups.add(input.name);
+    input.parentElement.style.background = '#f9fafb';
+    input.parentElement.style.borderColor = '#e5e7eb';
+  });
+
+  let correct = 0;
+
+  groups.forEach(group => {
+    const selected = document.querySelector('input[name="' + group + '"]:checked');
+    const correctOption = document.querySelector('input[name="' + group + '"][data-correct="true"]');
+
+    if (selected && selected.dataset.correct === 'true') {
+      correct++;
+      selected.parentElement.style.background = '#dcfce7';
+      selected.parentElement.style.borderColor = '#16a34a';
+    } else {
+      if (selected) {
+        selected.parentElement.style.background = '#fee2e2';
+        selected.parentElement.style.borderColor = '#dc2626';
+      }
+      if (correctOption) {
+        correctOption.parentElement.style.background = '#dcfce7';
+        correctOption.parentElement.style.borderColor = '#16a34a';
+      }
+    }
+  });
+
+  document.getElementById('score').textContent =
+    'Score: ' + correct + ' out of ' + groups.size + ' correct';
+}
+
+function resetAnswers() {
+  document.querySelectorAll('input[type="radio"]').forEach(input => {
+    input.checked = false;
+    input.parentElement.style.background = '#f9fafb';
+    input.parentElement.style.borderColor = '#e5e7eb';
+  });
+
+  document.getElementById('score').textContent = '';
+}
+
+window.addEventListener('DOMContentLoaded', shuffleQuestions);
+</script>
+</body>
+</html>
