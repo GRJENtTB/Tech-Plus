@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux Command Practice</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; background: #f7f9fb; color: #1f2937; }
+header { background: #2f6b2f; color: white; text-align: center; padding: 30px 20px; }
+main { max-width: 900px; margin: 0 auto; padding: 24px; }
+.activity { background: white; border: 1px solid #d1d5db; border-radius: 14px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+h2 { color: #2f6b2f; margin-top: 0; }
+.directions { background: #eaf5ea; border-left: 5px solid #2f6b2f; padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { border: 1px solid #d1d5db; padding: 12px; text-align: left; }
+th { background: #eaf5ea; }
+select { width: 100%; padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; }
+.button-row { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+button { border: none; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer; color: white; background: #2f6b2f; }
+button.secondary { background: #4b5563; }
+.score { margin-top: 16px; font-size: 1.1rem; font-weight: bold; }
+footer { text-align: center; color: #6b7280; padding: 24px; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Linux Command Practice</h1>
+  <p>Basic Linux Commands</p>
+</header>
+
+<main>
+  <section class="activity">
+    <h2>Activity: Linux Command Practice</h2>
+    <div class="directions">
+      Select the correct Linux command for each task.
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Task</th><th>Choose the Command</th></tr>
+      </thead>
+      <tbody id="task-body">
+        <tr><td>Display the current directory.</td><td><select data-answer="pwd"><option value="">Choose...</option><option>pwd</option><option>ls</option><option>cd</option><option>cat</option></select></td></tr>
+        <tr><td>List files and directories in the current directory.</td><td><select data-answer="ls"><option value="">Choose...</option><option>mkdir</option><option>ls</option><option>mv</option><option>clear</option></select></td></tr>
+        <tr><td>Change to another directory.</td><td><select data-answer="cd"><option value="">Choose...</option><option>touch</option><option>cd</option><option>cp</option><option>rm</option></select></td></tr>
+        <tr><td>Create a new directory.</td><td><select data-answer="mkdir"><option value="">Choose...</option><option>mkdir</option><option>touch</option><option>cat</option><option>pwd</option></select></td></tr>
+        <tr><td>Create a new empty file.</td><td><select data-answer="touch"><option value="">Choose...</option><option>cp</option><option>touch</option><option>ls</option><option>clear</option></select></td></tr>
+        <tr><td>Copy a file or directory.</td><td><select data-answer="cp"><option value="">Choose...</option><option>mv</option><option>rm</option><option>cp</option><option>pwd</option></select></td></tr>
+        <tr><td>Move or rename a file.</td><td><select data-answer="mv"><option value="">Choose...</option><option>cp</option><option>rm</option><option>mv</option><option>clear</option></select></td></tr>
+        <tr><td>Delete a file.</td><td><select data-answer="rm"><option value="">Choose...</option><option>mkdir</option><option>rm</option><option>cat</option><option>touch</option></select></td></tr>
+        <tr><td>Display the contents of a text file.</td><td><select data-answer="cat"><option value="">Choose...</option><option>cat</option><option>cd</option><option>ls</option><option>mkdir</option></select></td></tr>
+        <tr><td>Clear the terminal screen.</td><td><select data-answer="clear"><option value="">Choose...</option><option>pwd</option><option>touch</option><option>clear</option><option>cp</option></select></td></tr>
+      </tbody>
+    </table>
+
+    <div class="button-row">
+      <button onclick="checkAnswers()">Check Answers</button>
+      <button class="secondary" onclick="resetAnswers()">Reset</button>
+    </div>
+
+    <div class="score" id="score"></div>
+  </section>
+</main>
+
+<footer>
+  Lesson 2: Introduction to Operating Systems | Linux Command Practice
+</footer>
+
+<script>
+function shuffleTasks() {
+  const tbody = document.getElementById('task-body');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  for (let i = rows.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [rows[i], rows[j]] = [rows[j], rows[i]];
+  }
+
+  rows.forEach(row => tbody.appendChild(row));
+}
+
+function checkAnswers() {
+  const selects = document.querySelectorAll('select');
+  let correct = 0;
+
+  selects.forEach(select => {
+    if (select.value === select.dataset.answer) {
+      correct++;
+      select.style.background = '#dcfce7';
+      select.style.borderColor = '#16a34a';
+    } else {
+      select.style.background = '#fee2e2';
+      select.style.borderColor = '#dc2626';
+    }
+  });
+
+  document.getElementById('score').textContent =
+    'Score: ' + correct + ' out of ' + selects.length + ' correct';
+}
+
+function resetAnswers() {
+  const selects = document.querySelectorAll('select');
+
+  selects.forEach(select => {
+    select.value = '';
+    select.style.background = 'white';
+    select.style.borderColor = '#d1d5db';
+  });
+
+  document.getElementById('score').textContent = '';
+}
+
+window.addEventListener('DOMContentLoaded', shuffleTasks);
+</script>
+</body>
+</html>
