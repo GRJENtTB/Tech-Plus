@@ -39,7 +39,7 @@
       margin: 24px auto;
       padding: 0 16px;
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 1.35fr 1.65fr;
       gap: 20px;
     }
 
@@ -116,7 +116,7 @@
     .terminal-screen {
       height: 520px;
       overflow-y: auto;
-      padding: 16px;
+      padding: 8px 16px 16px;
       font-family: Consolas, Monaco, monospace;
       font-size: 15px;
       line-height: 1.5;
@@ -124,7 +124,7 @@
     }
 
     .terminal-line {
-      margin: 2px 0;
+      margin: 0;
     }
 
     .directory {
@@ -136,7 +136,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-top: 0;
+      margin: 0;
     }
 
     .prompt {
@@ -200,44 +200,29 @@
 <body>
   <header>
     <h1>Linux Command Line Simulator</h1>
-    <p>Practice basic terminal commands in a safe browser-based environment.</p>
   </header>
 
   <main>
     <section class="panel">
-      <div class="challenge" style="margin-top: 0; margin-bottom: 18px;">
-        <strong>Practice Mission:</strong><br />
-        Try these commands in order:<br />
-        1. <code>pwd</code> - Displays the current directory.<br />
-        2. <code>ls</code> - Lists files and directories.<br />
-        3. <code>mkdir JROTC</code> - Creates a new directory named <code>JROTC</code>.<br />
-        4. <code>cd JROTC</code> - Changes to the <code>JROTC</code> directory.<br />
-        5. <code>touch drill.txt</code> - Creates a new empty file named <code>drill.txt</code>.<br />
-        6. <code>cp drill.txt /home/cadet</code> - Copies <code>drill.txt</code> to the home directory.<br />
-        7. <code>cd /home/cadet</code> - Changes to the home directory.<br />
-        8. <code>ls</code> - Displays <code>drill.txt</code> to confirm it was copied to the home directory.<br />
-        9. <code>mv drill.txt roster.txt</code> - Renames <code>drill.txt</code> to <code>roster.txt</code>.<br />
-        10. <code>ls</code> - Displays <code>roster.txt</code> to confirm the file was renamed.<br />
-        11. <code>rm roster.txt</code> - Deletes <code>roster.txt</code>.<br />
-        12. <code>ls</code> - Confirms <code>roster.txt</code> was removed.<br />
-        13. <code>cat values.txt</code> - Displays the contents of <code>values.txt</code>.<br />
-        14. <code>clear</code> - Clears the terminal screen.
+      <div class="challenge" style="margin-top: 0; margin-bottom: 18px; max-height: 520px; overflow-y: auto;">
+        <strong>Practice Mission: Try these commands to uncover the hidden phrase.</strong><br />
+        <div style="margin-top: 8px;">
+          <div style="margin-bottom: 10px;"><strong>1.</strong> <code>pwd</code><br /><span style="font-size: 13px; color: #4b5563;">Displays the current directory.</span></div>
+          <div style="margin-bottom: 10px;"><strong>2.</strong> <code>ls</code><br /><span style="font-size: 13px; color: #4b5563;">Lists files and directories.</span></div>
+          <div style="margin-bottom: 10px;"><strong>3.</strong> <code>mkdir JROTC</code><br /><span style="font-size: 13px; color: #4b5563;">Creates a new directory named JROTC.</span></div>
+          <div style="margin-bottom: 10px;"><strong>4.</strong> <code>cd JROTC</code><br /><span style="font-size: 13px; color: #4b5563;">Changes to the JROTC directory.</span></div>
+          <div style="margin-bottom: 10px;"><strong>5.</strong> <code>touch drill.txt</code><br /><span style="font-size: 13px; color: #4b5563;">Creates a new empty file named drill.txt.</span></div>
+          <div style="margin-bottom: 10px;"><strong>6.</strong> <code>cp drill.txt /home/cadet</code><br /><span style="font-size: 13px; color: #4b5563;">Copies drill.txt to the home directory.</span></div>
+          <div style="margin-bottom: 10px;"><strong>7.</strong> <code>cd /home/cadet</code><br /><span style="font-size: 13px; color: #4b5563;">Changes to the home directory.</span></div>
+          <div style="margin-bottom: 10px;"><strong>8.</strong> <code>ls</code><br /><span style="font-size: 13px; color: #4b5563;">Displays drill.txt to confirm it was copied.</span></div>
+          <div style="margin-bottom: 10px;"><strong>9.</strong> <code>mv drill.txt roster.txt</code><br /><span style="font-size: 13px; color: #4b5563;">Renames drill.txt to roster.txt.</span></div>
+          <div style="margin-bottom: 10px;"><strong>10.</strong> <code>ls</code><br /><span style="font-size: 13px; color: #4b5563;">Displays roster.txt to confirm the rename.</span></div>
+          <div style="margin-bottom: 10px;"><strong>11.</strong> <code>rm roster.txt</code><br /><span style="font-size: 13px; color: #4b5563;">Deletes roster.txt.</span></div>
+          <div style="margin-bottom: 10px;"><strong>12.</strong> <code>ls</code><br /><span style="font-size: 13px; color: #4b5563;">Confirms roster.txt was removed.</span></div>
+          <div style="margin-bottom: 10px;"><strong>13.</strong> <code>cat values.txt</code><br /><span style="font-size: 13px; color: #4b5563;">Displays the contents of values.txt.</span></div>
+          <div><strong>14.</strong> <code>clear</code><br /><span style="font-size: 13px; color: #4b5563;">Clears the terminal screen.</span></div>
+        </div>
       </div>
-
-      <h2>Command Guide</h2>
-      <ul class="command-list">
-        <li><code>pwd</code> displays the current directory.</li>
-        <li><code>ls</code> lists files and directories.</li>
-        <li><code>cd</code> changes directories (for example: <code>cd missions</code> or <code>cd /home/cadet</code>).</li>
-        <li><code>mkdir</code> creates a new directory.</li>
-        <li><code>touch</code> creates a new empty file.</li>
-        <li><code>cp</code> copies a file while keeping the original file.</li>
-        <li><code>mv</code> moves or renames a file.</li>
-        <li><code>rm</code> deletes a file.</li>
-        <li><code>cat</code> displays file contents.</li>
-        <li><code>clear</code> clears the terminal screen.</li>
-        <li><code>help</code> shows available commands.</li>
-      </ul>
 
       <button type="button" onclick="resetSimulator()">Reset Simulator</button>
     </section>
@@ -250,9 +235,7 @@
         <span>cadet@cyber-lab</span>
       </div>
       <div class="terminal-screen" id="terminalScreen">
-        <div class="terminal-line success">Welcome to the Linux Command Line Simulator.</div>
-        <div class="terminal-line">Type a command and press Enter.</div>
-        
+        <div class="terminal-line success">Welcome to the Linux Command Line Simulator.</div><div class="terminal-line">Type a command and press Enter.</div>
         <div class="prompt-row" id="promptRow">
           <span class="prompt" id="prompt">cadet@cyber-lab:~$</span>
           <input id="commandInput" autocomplete="off" autofocus />
@@ -298,7 +281,7 @@
             homework: createDirectory({
               "assignment.txt": createFile("Homework: Practice pwd, ls, cd, mkdir, touch, mv, rm, cat, and clear.")
             }),
-            "values.txt": createFile("Excellence in Leadership\nService to the Nation"),
+            "values.txt": createFile("Hidden Phrase Unlocked!\nExcellence in Leadership\nService to the Nation"),
             "training.txt": createFile("Training schedule: Cybersecurity basics and Linux command practice.")
           })
         })
@@ -731,9 +714,7 @@
       flagShown = false;
 
       terminalScreen.innerHTML = `
-        <div class="terminal-line success">Welcome to the Linux Command Line Simulator.</div>
-        <div class="terminal-line">Type a command and press Enter.</div>
-        
+        <div class="terminal-line success">Welcome to the Linux Command Line Simulator.</div><div class="terminal-line">Type a command and press Enter.</div>
         <div class="prompt-row" id="promptRow">
           <span class="prompt" id="prompt">cadet@cyber-lab:~$</span>
           <input id="commandInput" autocomplete="off" autofocus />
