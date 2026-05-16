@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browser-Based Terminal Simulator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+
+    header {
+      background: #1f2937;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 15px;
+      color: #d1d5db;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .command-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .command-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    code {
+      background: #e5e7eb;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+    }
+
+    .challenge {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      background: #eef2ff;
+      border-left: 5px solid #4f46e5;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .terminal {
+      background: #111827;
+      color: #d1fae5;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    .terminal-bar {
+      background: #374151;
+      color: white;
+      padding: 10px 14px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .red { background: #ef4444; }
+    .yellow { background: #f59e0b; }
+    .green { background: #22c55e; }
+
+    .terminal-screen {
+      height: 520px;
+      overflow-y: auto;
+      padding: 16px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 15px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .terminal-line {
+      margin: 2px 0;
+    }
+
+    .directory {
+      color: #93c5fd;
+      font-weight: bold;
+    }
+
+    .prompt-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 0;
+    }
+
+    .prompt {
+      color: #93c5fd;
+      flex-shrink: 0;
+    }
+
+    #commandInput {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #d1fae5;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .success {
+      color: #86efac;
+      font-weight: bold;
+    }
+
+    .error {
+      color: #fca5a5;
+    }
+
+    .hint {
+      color: #fde68a;
+    }
+
+    .muted {
+      color: #9ca3af;
+    }
+
+    button {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    @media (max-width: 800px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .terminal-screen {
+        height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Linux Command Line Simulator</h1>
+    <p>Practice basic terminal commands in a safe browser-based environment.</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="challenge" style="margin-top: 0; margin-bottom: 18px;">
+        <strong>Practice Mission:</strong><br />
+        Try these commands in order:<br />
+        1. <code>pwd</code> - Displays the current directory.<br />
+        2. <code>ls</code> - Lists files and directories.<br />
+        3. <code>mkdir JROTC</code> - Creates a new directory named <code>JROTC</code>.<br />
+        4. <code>cd JROTC</code> - Changes to the <code>JROTC</code> directory.<br />
+        5. <code>touch drill.txt</code> - Creates a new empty file named <code>drill.txt</code>.<br />
+        6. <code>cp drill.txt /home/cadet</code> - Copies <code>drill.txt</code> to the home directory.<br />
+        7. <code>cd /home/cadet</code> - Changes to the home directory.<br />
+        8. <code>ls</code> - Displays <code>drill.txt</code> to confirm it was copied to the home directory.<br />
+        9. <code>mv drill.txt roster.txt</code> - Renames <code>drill.txt</code> to <code>roster.txt</code>.<br />
+        10. <code>ls</code> - Displays <code>roster.txt</code> to confirm the file was renamed.<br />
+        11. <code>rm roster.txt</code> - Deletes <code>roster.txt</code>.<br />
+        12. <code>ls</code> - Confirms <code>roster.txt</code> was removed.<br />
+        13. <code>cat values.txt</code> - Displays the contents of <code>values.txt</code>.<br />
+        14. <code>clear</code> - Clears the terminal screen.
+      </div>
+
+      <h2>Command Guide</h2>
+      <ul class="command-list">
+        <li><code>pwd</code> displays the current directory.</li>
+        <li><code>ls</code> lists files and directories.</li>
+        <li><code>cd</code> changes directories (for example: <code>cd missions</code> or <code>cd /home/cadet</code>).</li>
+        <li><code>mkdir</code> creates a new directory.</li>
+        <li><code>touch</code> creates a new empty file.</li>
+        <li><code>cp</code> copies a file while keeping the original file.</li>
+        <li><code>mv</code> moves or renames a file.</li>
+        <li><code>rm</code> deletes a file.</li>
+        <li><code>cat</code> displays file contents.</li>
+        <li><code>clear</code> clears the terminal screen.</li>
+        <li><code>help</code> shows available commands.</li>
+      </ul>
+
+      <button type="button" onclick="resetSimulator()">Reset Simulator</button>
+    </section>
+
+    <section class="terminal">
+      <div class="terminal-bar">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span>cadet@cyber-lab</span>
+      </div>
+      <div class="terminal-screen" id="terminalScreen">
+        <div class="terminal-line success">Welcome to the Linux Command Line Simulator.</div>
+        <div class="terminal-line">Type a command and press Enter.</div>
+        
+        <div class="prompt-row" id="promptRow">
+          <span class="prompt" id="prompt">cadet@cyber-lab:~$</span>
+          <input id="commandInput" autocomplete="off" autofocus />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const terminalScreen = document.getElementById("terminalScreen");
+    let commandInput = document.getElementById("commandInput");
+    let promptElement = document.getElementById("prompt");
+    let promptRow = document.getElementById("promptRow");
+
+    const HOME_PATH = ["home", "cadet"];
+    let currentPath = [...HOME_PATH];
+    let fileSystem = createInitialFileSystem();
+    let flagShown = false;
+
+    function createDirectory(children = {}) {
+      return {
+        type: "dir",
+        children
+      };
+    }
+
+    function createFile(content = "") {
+      return {
+        type: "file",
+        content
+      };
+    }
+
+    function createInitialFileSystem() {
+      return createDirectory({
+        home: createDirectory({
+          cadet: createDirectory({
+            missions: createDirectory({
+              "briefing.txt": createFile("Mission Briefing: Practice using Linux commands to manage files and folders."),
+              "roster.txt": createFile("Cadet roster file created for command line practice."),
+              "supplies.txt": createFile("Supplies: notebook, pencil, laptop, charger")
+            }),
+            homework: createDirectory({
+              "assignment.txt": createFile("Homework: Practice pwd, ls, cd, mkdir, touch, mv, rm, cat, and clear.")
+            }),
+            "values.txt": createFile("Excellence in Leadership\nService to the Nation"),
+            "training.txt": createFile("Training schedule: Cybersecurity basics and Linux command practice.")
+          })
+        })
+      });
+    }
+
+    function isDirectory(node) {
+      return node && node.type === "dir" && node.children && typeof node.children === "object";
+    }
+
+    function isFile(node) {
+      return node && node.type === "file";
+    }
+
+    function getNodeByPath(pathArray) {
+      let node = fileSystem;
+
+      for (const part of pathArray) {
+        if (!isDirectory(node) || !node.children[part]) {
+          return null;
+        }
+        node = node.children[part];
+      }
+
+      return node;
+    }
+
+    function getCurrentDirectory() {
+      const dir = getNodeByPath(currentPath);
+
+      if (!isDirectory(dir)) {
+        currentPath = [...HOME_PATH];
+        return getNodeByPath(currentPath);
+      }
+
+      return dir;
+    }
+
+    function normalizeInput(input) {
+      return input.trim().replace(/\s+/g, " ");
+    }
+
+    function tokenize(input) {
+      return normalizeInput(input).split(" ").filter(Boolean);
+    }
+
+    function getPromptPath() {
+      if (currentPath.join("/") === HOME_PATH.join("/")) {
+        return "~";
+      }
+
+      return "~/" + currentPath.slice(HOME_PATH.length).join("/");
+    }
+
+    function updatePrompt() {
+      promptElement.textContent = `cadet@cyber-lab:${getPromptPath()}$`;
+    }
+
+    function printLine(text = "", className = "") {
+      const line = document.createElement("div");
+      line.className = "terminal-line" + (className ? " " + className : "");
+      line.textContent = text;
+      terminalScreen.insertBefore(line, promptRow);
+      terminalScreen.scrollTop = terminalScreen.scrollHeight;
+    }
+
+    function printLsLine(names, dir) {
+      const line = document.createElement("div");
+      line.className = "terminal-line";
+
+      names.forEach((name, index) => {
+        const node = dir.children[name];
+        const span = document.createElement("span");
+        span.textContent = name;
+
+        if (isDirectory(node)) {
+          span.className = "directory";
+        }
+
+        line.appendChild(span);
+
+        if (index < names.length - 1) {
+          line.appendChild(document.createTextNode("  "));
+        }
+      });
+
+      terminalScreen.insertBefore(line, promptRow);
+      terminalScreen.scrollTop = terminalScreen.scrollHeight;
+    }
+
+    function printCommand(command) {
+      printLine(`${promptElement.textContent} ${command}`);
+    }
+
+    function attachInputListener() {
+      commandInput.addEventListener("keydown", function(event) {
+        if (event.key !== "Enter") return;
+
+        const input = normalizeInput(commandInput.value);
+        if (input) {
+          printCommand(input);
+          runCommand(input);
+        }
+
+        commandInput.value = "";
+      });
+    }
+
+    attachInputListener();
+
+    document.body.addEventListener("click", function() {
+      commandInput.focus();
+    });
+
+    function runCommand(input) {
+      const parts = tokenize(input);
+      const command = parts[0];
+      const args = parts.slice(1);
+
+      try {
+        switch (command) {
+          case "pwd":
+            printLine("/" + currentPath.join("/"));
+            break;
+          case "ls":
+            listDirectory();
+            break;
+          case "cd":
+            changeDirectory(args[0]);
+            break;
+          case "mkdir":
+            makeDirectory(args[0]);
+            break;
+          case "touch":
+            touchFile(args[0]);
+            break;
+          case "cp":
+            copyFile(args[0], args[1]);
+            break;
+          case "mv":
+            moveOrRenameFile(args[0], args[1]);
+            break;
+          case "rm":
+            removeFile(args[0]);
+            break;
+          case "cat":
+            displayFile(args[0]);
+            break;
+          case "clear":
+            clearTerminal();
+            break;
+          case "help":
+            showHelp();
+            break;
+          case "tests":
+            runTests(true);
+            break;
+          default:
+            printLine(`${command}: command not found`, "error");
+        }
+      } catch (error) {
+        printLine(`Simulator error: ${error.message}`, "error");
+      }
+
+      updatePrompt();
+      checkProgress();
+    }
+
+    function requireCurrentDirectory() {
+      const dir = getCurrentDirectory();
+
+      if (!isDirectory(dir)) {
+        throw new Error("The current path is not a valid directory.");
+      }
+
+      return dir;
+    }
+
+    function listDirectory() {
+      const dir = requireCurrentDirectory();
+      const names = Object.keys(dir.children).sort();
+
+      if (!names.length) {
+        printLine("");
+        return;
+      }
+
+      printLsLine(names, dir);
+    }
+
+    function changeDirectory(target) {
+      if (!target || target === "~") {
+        currentPath = [...HOME_PATH];
+        return;
+      }
+
+      if (target === "/") {
+        currentPath = [];
+        return;
+      }
+
+      if (target === "..") {
+        if (currentPath.length > HOME_PATH.length) {
+          currentPath.pop();
+        }
+        return;
+      }
+
+      // Support absolute paths such as:
+      // cd /home/cadet
+      // cd /home/cadet/missions
+      if (target.startsWith("/home/cadet")) {
+        if (target === "/home/cadet") {
+          currentPath = [...HOME_PATH];
+          return;
+        }
+
+        const remainder = target.slice("/home/cadet/".length);
+        const parts = remainder.split("/").filter(Boolean);
+        const testPath = [...HOME_PATH, ...parts];
+        const node = getNodeByPath(testPath);
+
+        if (isDirectory(node)) {
+          currentPath = testPath;
+        } else {
+          printLine(`cd: ${target}: No such directory`, "error");
+        }
+        return;
+      }
+
+      if (target.includes("/")) {
+        printLine("cd: this simulator supports absolute paths under /home/cadet only", "error");
+        return;
+      }
+
+      const dir = requireCurrentDirectory();
+      const nextNode = dir.children[target];
+
+      if (isDirectory(nextNode)) {
+        currentPath.push(target);
+      } else if (isFile(nextNode)) {
+        return;
+      } else {
+        printLine(`cd: ${target}: No such directory`, "error");
+      }
+    }
+
+    function isValidName(name) {
+      return Boolean(name) && name !== "." && name !== "..";
+    }
+
+    function makeDirectory(name) {
+      if (!isValidName(name)) {
+        printLine("mkdir: enter one valid directory name", "error");
+        return;
+      }
+
+      const dir = requireCurrentDirectory();
+
+      if (dir.children[name]) {
+        printLine(`mkdir: cannot create directory '${name}': File exists`, "error");
+        return;
+      }
+
+      dir.children[name] = createDirectory();
+    }
+
+    function touchFile(name) {
+      if (!isValidName(name)) {
+        printLine("touch: enter one valid file name", "error");
+        return;
+      }
+
+      const dir = requireCurrentDirectory();
+
+      if (!dir.children[name]) {
+        dir.children[name] = createFile();
+      }
+    }
+
+    function copyFile(source, destination) {
+      if (!source || !destination) {
+        printLine("cp: enter a source file and destination file", "error");
+        printLine("Example: cp briefing.txt briefing_copy.txt", "hint");
+        return;
+      }
+
+      const currentDir = requireCurrentDirectory();
+      const sourceNode = currentDir.children[source];
+
+      if (!sourceNode) {
+        printLine(`cp: cannot stat '${source}': No such file`, "error");
+        return;
+      }
+
+      if (!isFile(sourceNode)) {
+        printLine(`cp: -r not specified; '${source}' is a directory`, "error");
+        return;
+      }
+
+      let destinationDir = currentDir;
+      let destinationName = destination;
+
+      // Support copying to the home directory:
+      // cp drill.txt /home/cadet
+      if (destination === "/home/cadet") {
+        destinationDir = getNodeByPath(HOME_PATH);
+        destinationName = source;
+      }
+      // Support copying to a specific file in the home directory:
+      // cp drill.txt /home/cadet/drill_copy.txt
+      else {
+        const homePrefix = "/home/cadet/";
+        if (destination.startsWith(homePrefix)) {
+          destinationDir = getNodeByPath(HOME_PATH);
+          destinationName = destination.slice(homePrefix.length);
+        }
+      }
+
+      if (!isDirectory(destinationDir)) {
+        printLine("cp: destination directory not found", "error");
+        return;
+      }
+
+      if (!isValidName(destinationName)) {
+        printLine("cp: invalid destination", "error");
+        return;
+      }
+
+      if (destinationDir.children[destinationName] && isDirectory(destinationDir.children[destinationName])) {
+        printLine("cp: destination is a directory", "error");
+        return;
+      }
+
+      destinationDir.children[destinationName] = createFile(sourceNode.content);
+    }
+
+    function moveOrRenameFile(source, destination) {
+      if (!isValidName(source) || !isValidName(destination)) {
+        printLine("mv: enter a source name and destination name", "error");
+        return;
+      }
+
+      const dir = requireCurrentDirectory();
+      const sourceNode = dir.children[source];
+
+      if (!sourceNode) {
+        printLine(`mv: cannot stat '${source}': No such file or directory`, "error");
+        return;
+      }
+
+      dir.children[destination] = sourceNode;
+      delete dir.children[source];
+    }
+
+    function removeFile(name) {
+      if (!isValidName(name)) {
+        printLine("rm: enter one valid file name", "error");
+        return;
+      }
+
+      const dir = requireCurrentDirectory();
+      const node = dir.children[name];
+
+      if (!node) {
+        printLine(`rm: cannot remove '${name}': No such file`, "error");
+        return;
+      }
+
+      if (isDirectory(node)) {
+        printLine(`rm: cannot remove '${name}': Is a directory`, "error");
+        return;
+      }
+
+      delete dir.children[name];
+    }
+
+    function displayFile(name) {
+      if (!isValidName(name)) {
+        printLine("cat: enter one valid file name", "error");
+        return;
+      }
+
+      const dir = requireCurrentDirectory();
+      const node = dir.children[name];
+
+      if (!node) {
+        printLine(`cat: ${name}: No such file`, "error");
+        return;
+      }
+
+      if (!isFile(node)) {
+        printLine(`cat: ${name}: Is a directory`, "error");
+        return;
+      }
+
+      printLine(node.content || "");
+    }
+
+    function clearTerminal() {
+      const currentPromptRow = promptRow;
+      terminalScreen.innerHTML = "";
+      terminalScreen.appendChild(currentPromptRow);
+      commandInput.focus();
+    }
+
+    function showHelp() {
+      printLine("Available commands: pwd, ls, cd, mkdir, touch, cp, mv, rm, cat, clear, help");
+          }
+
+    function checkProgress() {
+      const dir = getCurrentDirectory();
+
+      if (!isDirectory(dir)) return;
+
+      if (
+        !flagShown &&
+        currentPath.join("/") === "home/cadet/missions" &&
+        isFile(dir.children["leadership.txt"]) &&
+        isDirectory(dir.children.practice)
+      ) {
+        flagShown = true;
+        printLine("Great work! Secret flag unlocked: TORVALDS", "success");
+      }
+    }
+
+    function resetSimulator() {
+      fileSystem = createInitialFileSystem();
+      currentPath = [...HOME_PATH];
+      flagShown = false;
+
+      terminalScreen.innerHTML = `
+        <div class="terminal-line success">Welcome to the Linux Command Line Simulator.</div>
+        <div class="terminal-line">Type a command and press Enter.</div>
+        
+        <div class="prompt-row" id="promptRow">
+          <span class="prompt" id="prompt">cadet@cyber-lab:~$</span>
+          <input id="commandInput" autocomplete="off" autofocus />
+        </div>
+      `;
+
+      commandInput = document.getElementById("commandInput");
+      promptElement = document.getElementById("prompt");
+      promptRow = document.getElementById("promptRow");
+      attachInputListener();
+      updatePrompt();
+      commandInput.focus();
+    }
+
+    function assertTest(condition, message) {
+      if (!condition) {
+        throw new Error(message);
+      }
+    }
+
+    function runTests(printResults = false) {
+      const savedFileSystem = fileSystem;
+      const savedPath = [...currentPath];
+      const savedFlagShown = flagShown;
+
+      fileSystem = createInitialFileSystem();
+      currentPath = [...HOME_PATH];
+      flagShown = false;
+
+      const homeDir = getCurrentDirectory();
+      assertTest(isDirectory(homeDir), "Home directory should be valid.");
+      assertTest(isDirectory(homeDir.children.missions), "missions folder should exist.");
+      assertTest(isDirectory(homeDir.children.homework), "homework folder should exist.");
+      assertTest(isFile(homeDir.children["values.txt"]), "values.txt should exist.");
+
+      changeDirectory("missions");
+      assertTest(currentPath.join("/") === "home/cadet/missions", "cd missions should update the path.");
+
+      makeDirectory("practice");
+      copyFile("briefing.txt", "briefing_copy.txt");
+      touchFile("notes.txt");
+      moveOrRenameFile("notes.txt", "leadership.txt");
+      const missionsDir = getCurrentDirectory();
+      assertTest(isFile(missionsDir.children["briefing.txt"]), "cp should keep the original briefing.txt file.");
+      assertTest(isFile(missionsDir.children["briefing_copy.txt"]), "cp should create briefing_copy.txt.");
+      assertTest(missionsDir.children["briefing_copy.txt"].content === missionsDir.children["briefing.txt"].content, "cp should copy the same file content.");
+
+      copyFile("briefing.txt", "/home/cadet");
+      const homeAfterCopy = getNodeByPath(HOME_PATH);
+      assertTest(isFile(homeAfterCopy.children["briefing.txt"]), "cp drill.txt /home/cadet should copy the file to the home directory.");
+      assertTest(isFile(missionsDir.children["briefing.txt"]), "cp to /home/cadet should keep the original file.");
+
+      copyFile("briefing.txt", "/home/cadet/drill_copy.txt");
+      assertTest(isFile(homeAfterCopy.children["drill_copy.txt"]), "cp should support /home/cadet/drill_copy.txt.");
+      assertTest(isDirectory(missionsDir.children.practice), "mkdir practice should create a folder.");
+      assertTest(isFile(missionsDir.children["leadership.txt"]), "mv should rename notes.txt to leadership.txt.");
+      assertTest(!missionsDir.children["notes.txt"], "notes.txt should no longer exist after mv.");
+
+      changeDirectory("..");
+      changeDirectory("homework");
+      const homeworkDir = getCurrentDirectory();
+      assertTest(isDirectory(homeworkDir), "cd homework should not break directory traversal.");
+      assertTest(isFile(homeworkDir.children["assignment.txt"]), "homework should contain assignment.txt.");
+
+      changeDirectory("assignment.txt");
+      assertTest(currentPath.join("/") === "home/cadet/homework", "cd into a file should not change the path.");
+
+      removeFile("assignment.txt");
+      assertTest(!homeworkDir.children["assignment.txt"], "rm should delete files.");
+
+      fileSystem = savedFileSystem;
+      currentPath = savedPath;
+      flagShown = savedFlagShown;
+      updatePrompt();
+
+      if (printResults) {
+        printLine("All simulator tests passed.", "success");
+      }
+    }
+
+    runTests(false);
+    updatePrompt();
+  </script>
+</body>
+</html>
