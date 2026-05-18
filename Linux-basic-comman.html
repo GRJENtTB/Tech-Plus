@@ -1,116 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Linux Command Practice</title>
-<style>
-body { font-family: Arial, sans-serif; margin: 0; background: #f7f9fb; color: #1f2937; }
-header { background: #2f6b2f; color: white; text-align: center; padding: 30px 20px; }
-main { max-width: 900px; margin: 0 auto; padding: 24px; }
-.activity { background: white; border: 1px solid #d1d5db; border-radius: 14px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-h2 { color: #2f6b2f; margin-top: 0; }
-.directions { background: #eaf5ea; border-left: 5px solid #2f6b2f; padding: 12px; border-radius: 8px; margin-bottom: 20px; }
-table { width: 100%; border-collapse: collapse; }
-th, td { border: 1px solid #d1d5db; padding: 12px; text-align: left; }
-th { background: #eaf5ea; }
-select { width: 100%; padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; }
-.button-row { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-button { border: none; border-radius: 8px; padding: 10px 16px; font-size: 1rem; cursor: pointer; color: white; background: #2f6b2f; }
-button.secondary { background: #4b5563; }
-.score { margin-top: 16px; font-size: 1.1rem; font-weight: bold; }
-footer { text-align: center; color: #6b7280; padding: 24px; font-size: 0.9rem; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Command Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f7f9fb;
+            color: #1f2937;
+        }
+
+        header {
+            background: #2f6b2f;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .activity {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            color: #2f6b2f;
+            margin-top: 0;
+        }
+
+        .directions {
+            background: #eaf5ea;
+            border-left: 5px solid #2f6b2f;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #d1d5db;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #eaf5ea;
+        }
+
+        select {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+        .button-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            color: white;
+            background: #2f6b2f;
+        }
+
+        button.secondary {
+            background: #4b5563;
+        }
+
+        .score {
+            margin-top: 16px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            color: #6b7280;
+            padding: 24px;
+            font-size: 0.9rem;
+        }
+
+        .keyword-banner {
+            display: none;
+            margin: 0 0 20px 0;
+            padding: 18px;
+            border-radius: 10px;
+            background: #fff8e1;
+            border: 2px solid #f59e0b;
+            color: #78350f;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .confetti-piece {
+            position: fixed;
+            top: -12px;
+            width: 10px;
+            height: 14px;
+            opacity: 0.9;
+            z-index: 9999;
+            pointer-events: none;
+            animation: confetti-fall 2.5s linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(105vh) rotate(720deg); }
+        }
+
+    </style>
 </head>
+
 <body>
-<header>
-  <h1>Linux Command Practice</h1>
-  <p>Basic Linux Commands</p>
-</header>
+    <header>
+        <h1>Linux Command Practice</h1>
+        <p>Basic Linux Commands</p>
+    </header>
 
-<main>
-  <section class="activity">
-    <h2>Activity: Linux Command Practice</h2>
-    <div class="directions">
-      Select the correct Linux command for each task.
-    </div>
+    <main>
+        <section class="activity">
+            <h2>Activity: Linux Command Practice</h2>
+            <div class="directions">
+                Select the correct Linux command for each task and unlock the hidden keyword.
+            </div>
 
-    <table>
-      <thead>
-        <tr><th>Task</th><th>Choose the Command</th></tr>
-      </thead>
-      <tbody id="task-body">
-        <tr><td>Display the current directory.</td><td><select data-answer="pwd"><option value="">Choose...</option><option>pwd</option><option>ls</option><option>cd</option><option>cat</option></select></td></tr>
-        <tr><td>List files and directories in the current directory.</td><td><select data-answer="ls"><option value="">Choose...</option><option>mkdir</option><option>ls</option><option>mv</option><option>clear</option></select></td></tr>
-        <tr><td>Change to another directory.</td><td><select data-answer="cd"><option value="">Choose...</option><option>touch</option><option>cd</option><option>cp</option><option>rm</option></select></td></tr>
-        <tr><td>Create a new directory.</td><td><select data-answer="mkdir"><option value="">Choose...</option><option>mkdir</option><option>touch</option><option>cat</option><option>pwd</option></select></td></tr>
-        <tr><td>Create a new empty file.</td><td><select data-answer="touch"><option value="">Choose...</option><option>cp</option><option>touch</option><option>ls</option><option>clear</option></select></td></tr>
-        <tr><td>Copy a file or directory.</td><td><select data-answer="cp"><option value="">Choose...</option><option>mv</option><option>rm</option><option>cp</option><option>pwd</option></select></td></tr>
-        <tr><td>Move or rename a file.</td><td><select data-answer="mv"><option value="">Choose...</option><option>cp</option><option>rm</option><option>mv</option><option>clear</option></select></td></tr>
-        <tr><td>Delete a file.</td><td><select data-answer="rm"><option value="">Choose...</option><option>mkdir</option><option>rm</option><option>cat</option><option>touch</option></select></td></tr>
-        <tr><td>Display the contents of a text file.</td><td><select data-answer="cat"><option value="">Choose...</option><option>cat</option><option>cd</option><option>ls</option><option>mkdir</option></select></td></tr>
-        <tr><td>Clear the terminal screen.</td><td><select data-answer="clear"><option value="">Choose...</option><option>pwd</option><option>touch</option><option>clear</option><option>cp</option></select></td></tr>
-      </tbody>
-    </table>
+            <div id="keywordBanner" class="keyword-banner">
+                <span id="keywordText"></span>
+            </div>
 
-    <div class="button-row">
-      <button onclick="checkAnswers()">Check Answers</button>
-      <button class="secondary" onclick="resetAnswers()">Reset</button>
-    </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Choose the Command</th>
+                    </tr>
+                </thead>
+                <tbody id="task-body">
+                    <tr>
+                        <td>Display the current directory.</td>
+                        <td><select data-answer="pwd">
+                                <option value="">Choose...</option>
+                                <option>pwd</option>
+                                <option>ls</option>
+                                <option>cd</option>
+                                <option>cat</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>List files and directories in the current directory.</td>
+                        <td><select data-answer="ls">
+                                <option value="">Choose...</option>
+                                <option>mkdir</option>
+                                <option>ls</option>
+                                <option>mv</option>
+                                <option>clear</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Change to another directory.</td>
+                        <td><select data-answer="cd">
+                                <option value="">Choose...</option>
+                                <option>touch</option>
+                                <option>cd</option>
+                                <option>cp</option>
+                                <option>rm</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Create a new directory.</td>
+                        <td><select data-answer="mkdir">
+                                <option value="">Choose...</option>
+                                <option>mkdir</option>
+                                <option>touch</option>
+                                <option>cat</option>
+                                <option>pwd</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Create a new empty file.</td>
+                        <td><select data-answer="touch">
+                                <option value="">Choose...</option>
+                                <option>cp</option>
+                                <option>touch</option>
+                                <option>ls</option>
+                                <option>clear</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Copy a file or directory.</td>
+                        <td><select data-answer="cp">
+                                <option value="">Choose...</option>
+                                <option>mv</option>
+                                <option>rm</option>
+                                <option>cp</option>
+                                <option>pwd</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Move or rename a file.</td>
+                        <td><select data-answer="mv">
+                                <option value="">Choose...</option>
+                                <option>cp</option>
+                                <option>rm</option>
+                                <option>mv</option>
+                                <option>clear</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Delete a file.</td>
+                        <td><select data-answer="rm">
+                                <option value="">Choose...</option>
+                                <option>mkdir</option>
+                                <option>rm</option>
+                                <option>cat</option>
+                                <option>touch</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Display the contents of a text file.</td>
+                        <td><select data-answer="cat">
+                                <option value="">Choose...</option>
+                                <option>cat</option>
+                                <option>cd</option>
+                                <option>ls</option>
+                                <option>mkdir</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Clear the terminal screen.</td>
+                        <td><select data-answer="clear">
+                                <option value="">Choose...</option>
+                                <option>pwd</option>
+                                <option>touch</option>
+                                <option>clear</option>
+                                <option>cp</option>
+                            </select></td>
+                    </tr>
+                </tbody>
+            </table>
 
-    <div class="score" id="score"></div>
-  </section>
-</main>
+            <div class="button-row">
+                <button onclick="checkAnswers()">Check Answers</button>
+                <button class="secondary" onclick="resetAnswers()">Reset</button>
+            </div>
 
-<footer>
-  Linux Command Practice
-</footer>
+            <div class="score" id="score"></div>
+        </section>
+    </main>
 
-<script>
-function shuffleTasks() {
-  const tbody = document.getElementById('task-body');
-  const rows = Array.from(tbody.querySelectorAll('tr'));
+    <footer>
+        Linux Command Practice
+    </footer>
 
-  for (let i = rows.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [rows[i], rows[j]] = [rows[j], rows[i]];
-  }
+    <script>
 
-  rows.forEach(row => tbody.appendChild(row));
-}
+        let celebrationShown = false;
 
-function checkAnswers() {
-  const selects = document.querySelectorAll('select');
-  let correct = 0;
+        function revealKeyword() {
+            const keyword = atob("V2luZG93cyBYUA==");
+            document.getElementById('keywordText').textContent =
+                'Hidden Keyword Unlocked: ' + keyword;
+            document.getElementById('keywordBanner').style.display = 'block';
+            document.getElementById('keywordBanner').scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
 
-  selects.forEach(select => {
-    if (select.value === select.dataset.answer) {
-      correct++;
-      select.style.background = '#dcfce7';
-      select.style.borderColor = '#16a34a';
-    } else {
-      select.style.background = '#fee2e2';
-      select.style.borderColor = '#dc2626';
-    }
-  });
+        function hideKeyword() {
+            document.getElementById('keywordText').textContent = '';
+            document.getElementById('keywordBanner').style.display = 'none';
+        }
 
-  document.getElementById('score').textContent =
-    'Score: ' + correct + ' out of ' + selects.length + ' correct';
-}
+        function launchConfetti() {
+            const colors = ['#2f6b2f', '#2563eb', '#f59e0b', '#dc2626', '#7c3aed'];
+            for (let i = 0; i < 90; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.left = Math.random() * 100 + 'vw';
+                piece.style.backgroundColor =
+                    colors[Math.floor(Math.random() * colors.length)];
+                piece.style.animationDelay = (Math.random() * 0.5) + 's';
+                document.body.appendChild(piece);
+                setTimeout(() => piece.remove(), 3000);
+            }
+        }
 
-function resetAnswers() {
-  const selects = document.querySelectorAll('select');
+        function shuffleTasks() {
+            const tbody = document.getElementById('task-body');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
 
-  selects.forEach(select => {
-    select.value = '';
-    select.style.background = 'white';
-    select.style.borderColor = '#d1d5db';
-  });
+            for (let i = rows.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [rows[i], rows[j]] = [rows[j], rows[i]];
+            }
 
-  document.getElementById('score').textContent = '';
-}
+            rows.forEach(row => tbody.appendChild(row));
+        }
 
-window.addEventListener('DOMContentLoaded', shuffleTasks);
-</script>
+        function checkAnswers() {
+            const selects = document.querySelectorAll('select');
+            let correct = 0;
+
+            selects.forEach(select => {
+                if (select.value === select.dataset.answer) {
+                    correct++;
+                    select.style.background = '#dcfce7';
+                    select.style.borderColor = '#16a34a';
+                } else {
+                    select.style.background = '#fee2e2';
+                    select.style.borderColor = '#dc2626';
+                }
+            });
+
+            document.getElementById('score').textContent =
+                'Score: ' + correct + ' out of ' + selects.length + ' correct';
+
+            if (correct === selects.length) {
+                revealKeyword();
+                if (!celebrationShown) {
+                    launchConfetti();
+                    celebrationShown = true;
+                }
+            } else {
+                hideKeyword();
+            }
+        }
+
+        function resetAnswers() {
+            const selects = document.querySelectorAll('select');
+
+            selects.forEach(select => {
+                select.value = '';
+                select.style.background = 'white';
+                select.style.borderColor = '#d1d5db';
+            });
+
+            document.getElementById('score').textContent = '';
+            hideKeyword();
+            celebrationShown = false;
+        }
+
+        window.addEventListener('DOMContentLoaded', shuffleTasks);
+    </script>
 </body>
+
 </html>
