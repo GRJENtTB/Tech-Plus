@@ -1,186 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Operating System Management Drag-and-Drop</title>
-<style>
-  :root{--green:#2f5f2a;--light:#f6faf4;--card:#fff;--line:#cfd8cc;--good:#2e7d32;--bad:#b00020;--blue:#e8f1ff;}
-  body{font-family:Arial, Helvetica, sans-serif;margin:0;background:var(--light);color:#1f2a1f;}
-  header{background:var(--green);color:white;padding:22px 28px;}
-  header h1{margin:0;font-size:28px;} header p{margin:8px 0 0;font-size:16px;max-width:900px;}
-  main{padding:22px;max-width:1200px;margin:auto;}
-  .directions{background:#fff;border-left:6px solid var(--green);padding:14px 18px;margin-bottom:18px;box-shadow:0 1px 5px #0001;}
-  .layout{display:grid;grid-template-columns: 360px 1fr;gap:18px;align-items:start;}
-  .bank,.zones{min-width:0;}
-  #cards{max-height:70vh;overflow-y:auto;padding-right:6px;}
-  .zones{max-height:80vh;overflow-y:auto;}
-  @media(max-width:850px){.layout{grid-template-columns:1fr;}.zones-grid{grid-template-columns:1fr;} header h1{font-size:23px;}}
-  .bank,.zones{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 2px 8px #00000010;}
-  .bank h2,.zones h2{margin-top:0;font-size:20px;}
-  #cards{display:flex;flex-wrap:wrap;gap:10px;min-height:90px;}
-  .card{background:var(--blue);border:2px solid #7da2d6;border-radius:10px;padding:10px 12px;cursor:grab;max-width:260px;line-height:1.25;font-size:15px;user-select:none;}
-  .card:focus{outline:3px solid #f7c948;}
-  .zones-grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:14px;}
-  .zone{border:2px dashed #8aa082;border-radius:14px;min-height:165px;padding:12px;background:#fbfdfb;}
-  .zone h3{margin:0 0 8px;color:var(--green);font-size:18px;}
-  .zone p{margin:0 0 10px;font-size:13px;color:#4b5b4b;}
-  .zone.over{background:#eef8ec;border-color:var(--green);} .zone .card{margin-bottom:8px;}
-  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
-  button{border:0;border-radius:9px;padding:10px 16px;font-weight:bold;cursor:pointer;background:var(--green);color:#fff;font-size:15px;}
-  button.secondary{background:#566156;}
-  #feedback{margin-top:14px;font-weight:bold;padding:12px;border-radius:10px;display:none;}
-  #feedback.good{display:block;background:#e8f5e9;color:var(--good);} #feedback.bad{display:block;background:#fdecea;color:var(--bad);}
-  .correct{border-color:var(--good)!important;background:#eef9ef!important;} .incorrect{border-color:var(--bad)!important;background:#fff1f3!important;}
-  .teacher-notes{margin-top:20px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;}
-  .teacher-notes summary{cursor:pointer;font-weight:bold;color:var(--green);} .teacher-notes li{margin:6px 0;}
-  
-
-  .confetti-piece{
-    position:fixed;
-    top:-12px;
-    width:10px;
-    height:14px;
-    opacity:.9;
-    z-index:9999;
-    pointer-events:none;
-    animation:confetti-fall 2.4s linear forwards;
-  }
-  @keyframes confetti-fall{
-    0%{transform:translateY(0) rotate(0deg);}
-    100%{transform:translateY(105vh) rotate(720deg);}
-  }
-
-</style>
-</head>
-<body>
-<header>
-  <h1>Operating System Management: Drag-and-Drop Review</h1>
-  <p>Match each operating system task to the type of management it best represents.</p>
-</header>
-<main>
-  <section class="directions">
-    <strong>Directions:</strong> Move each card from the Word Bank to its matching category. After all cards are placed, select <strong>Check Answers</strong> to unlock the secret keyword.</section>
-
-  <div id="keywordBanner" style="display:none;margin:0 0 18px 0;padding:18px;border-radius:12px;background:#fff8e1;border:2px solid #f9a825;color:#5d4037;font-size:26px;font-weight:bold;text-align:center;"><span id="keywordText"></span></div>
-
-  <section class="layout">
-    <div class="bank" aria-label="Word bank">
-      <h2>Word Bank</h2>
-      <div id="cards"></div>
-    </div>
-    <div class="zones">
-      <h2>Drop Zones</h2>
-      <div class="zones-grid">
-        <div class="zone" data-zone="device"><h3>Device Management</h3><p>Tracks connected hardware and uses drivers.</p></div>
-        <div class="zone" data-zone="task"><h3>Task & Process Management</h3><p>Controls running programs and processes.</p></div>
-        <div class="zone" data-zone="memory"><h3>Memory Management</h3><p>Assigns and releases RAM for active processes.</p></div>
-        <div class="zone" data-zone="storage"><h3>File, Disk & Storage Management</h3><p>Organizes files, folders, drives, and file systems.</p></div>
-        <div class="zone" data-zone="services"><h3>Service Management</h3><p>Controls background services that run automatically.</p></div>
-        <div class="zone" data-zone="access"><h3>Access Control</h3><p>Manages sign-in, users, and permissions.</p></div>
-      </div>
-      <div class="controls">
-        <button onclick="checkAnswers()">Check Answers</button>
-        <button class="secondary" onclick="resetActivity()">Reset</button>
-      </div>
-      <div id="feedback" role="status"></div>
-    </div>
-  </section>
-  
-</main>
-<script>
-const items = [
-  {text:'Detects a printer, keyboard, or USB device connected to the computer.', zone:'device'},
-  {text:'Loads or updates the driver needed for a piece of hardware.', zone:'device'},
-  {text:'Stops an application that is frozen or not responding.', zone:'task'},
-  {text:'Uses multiple CPU cores to handle tasks at the same time.', zone:'task'},
-  {text:'Allows a word processor to check spelling while the user keeps typing.', zone:'task'},
-  {text:'Assigns RAM to programs that are currently running.', zone:'memory'},
-  {text:'Tracks which active processes are using memory.', zone:'memory'},
-  {text:'Releases memory after a task no longer needs it.', zone:'memory'},
-  {text:'Creates, opens, renames, or deletes files and folders.', zone:'storage'},
-  {text:'Uses disk management tools to organize and maintain storage devices.', zone:'storage'},
-  {text:'Starts, stops, configures, or monitors background services.', zone:'services'},
-  {text:'Runs in the background to help the OS or applications perform tasks automatically.', zone:'services'},
-  {text:'Requires a user to sign in before accessing data.', zone:'access'},
-  {text:'Gives an administrator full access but limits a standard user from system-level changes.', zone:'access'}
-];
-let dragged = null;
-let celebrationShown = false;
-function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);}
-function makeCard(item, i){
-  const c=document.createElement('div'); c.className='card'; c.draggable=true; c.tabIndex=0; c.id='card-'+i; c.dataset.answer=item.zone; c.textContent=item.text;
-  c.addEventListener('dragstart',()=>{dragged=c; setTimeout(()=>c.style.opacity=.55,0)});
-  c.addEventListener('dragend',()=>{c.style.opacity=1; dragged=null});
-  return c;
-}
-function init(){
-  const bank=document.getElementById('cards'); bank.innerHTML='';
-  document.querySelectorAll('.zone .card').forEach(c=>c.remove());
-  shuffle(items).forEach((item,i)=>bank.appendChild(makeCard(item,i)));
-  document.getElementById('feedback').style.display='none';
-  document.getElementById('keywordBanner').style.display='none';
-  celebrationShown = false;
-  document.getElementById('keywordBanner').style.display='none';
-  document.querySelectorAll('.zone').forEach(z=>z.classList.remove('correct','incorrect'));
-}
-document.querySelectorAll('.zone, #cards').forEach(target=>{
-  target.addEventListener('dragover',e=>{e.preventDefault(); target.classList?.add('over');});
-  target.addEventListener('dragleave',()=>target.classList?.remove('over'));
-  target.addEventListener('drop',e=>{e.preventDefault(); target.classList?.remove('over'); if(dragged) target.appendChild(dragged);});
-});
-
-
-function revealKeyword(){
-  const encoded = "VG9ydmFsZHM=";
-  const keyword = atob(encoded);
-  document.getElementById('keywordText').textContent = "Keyword Unlocked: " + keyword;
-}
-
-function launchConfetti(){
-  const colors=['#2f5f2a','#f9a825','#1976d2','#c2185b','#7b1fa2','#ef6c00'];
-  for(let i=0;i<90;i++){
-    const piece=document.createElement('div');
-    piece.className='confetti-piece';
-    piece.style.left=Math.random()*100+'vw';
-    piece.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
-    piece.style.animationDelay=(Math.random()*0.5)+'s';
-    piece.style.transform='rotate('+(Math.random()*360)+'deg)';
-    document.body.appendChild(piece);
-    setTimeout(()=>piece.remove(),3000);
-  }
-}
-
-function checkAnswers(){
-  let total=items.length, correct=0;
-  document.querySelectorAll('.zone').forEach(zone=>{
-    zone.classList.remove('correct','incorrect');
-    let cards=[...zone.querySelectorAll('.card')];
-    cards.forEach(c=>{c.classList.remove('correct','incorrect'); if(c.dataset.answer===zone.dataset.zone){c.classList.add('correct'); correct++;} else {c.classList.add('incorrect');}});
-  });
-  const fb=document.getElementById('feedback');
-  const banner=document.getElementById('keywordBanner');
-  if(correct===total){
-    fb.className='good';
-    fb.textContent=`Great job! ${correct}/${total} correct.`;
-    revealKeyword(); banner.style.display='block';
-    banner.scrollIntoView({behavior:'smooth', block:'center'});
-    if(!celebrationShown){
-      launchConfetti();
-      celebrationShown=true;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operating System Management Drag-and-Drop</title>
+  <style>
+    :root {
+      --green: #2f5f2a;
+      --light: #f6faf4;
+      --card: #fff;
+      --line: #cfd8cc;
+      --good: #2e7d32;
+      --bad: #b00020;
+      --blue: #e8f1ff;
     }
-  } else {
-    fb.className='bad';
-    fb.textContent=`You have ${correct}/${total} correct. Review the highlighted cards and try again.`;
-    banner.style.display='none';
-  }
-}
-function resetActivity(){init();}
-function showAnswers(){
-  document.querySelectorAll('.card').forEach(c=>document.querySelector(`.zone[data-zone="${c.dataset.answer}"]`).appendChild(c));
-  checkAnswers();
-}
-init();
-</script>
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      background: var(--light);
+      color: #1f2a1f;
+    }
+
+    header {
+      background: var(--green);
+      color: white;
+      padding: 22px 28px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 16px;
+      max-width: 900px;
+    }
+
+    main {
+      padding: 22px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .directions {
+      background: #fff;
+      border-left: 6px solid var(--green);
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 5px #0001;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .bank,
+    .zones {
+      min-width: 0;
+    }
+
+    #cards {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .zones {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    @media(max-width:850px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .zones-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 23px;
+      }
+    }
+
+    .bank,
+    .zones {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 8px #00000010;
+    }
+
+    .bank h2,
+    .zones h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    #cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-height: 90px;
+    }
+
+    .card {
+      background: var(--blue);
+      border: 2px solid #7da2d6;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: grab;
+      max-width: 260px;
+      line-height: 1.25;
+      font-size: 15px;
+      user-select: none;
+    }
+
+    .card:focus {
+      outline: 3px solid #f7c948;
+    }
+
+    .zones-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .zone {
+      border: 2px dashed #8aa082;
+      border-radius: 14px;
+      min-height: 165px;
+      padding: 12px;
+      background: #fbfdfb;
+    }
+
+    .zone h3 {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 18px;
+    }
+
+    .zone p {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: #4b5b4b;
+    }
+
+    .zone.over {
+      background: #eef8ec;
+      border-color: var(--green);
+    }
+
+    .zone .card {
+      margin-bottom: 8px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 10px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background: var(--green);
+      color: #fff;
+      font-size: 15px;
+    }
+
+    button.secondary {
+      background: #566156;
+    }
+
+    #feedback {
+      margin-top: 14px;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    #feedback.good {
+      display: block;
+      background: #e8f5e9;
+      color: var(--good);
+    }
+
+    #feedback.bad {
+      display: block;
+      background: #fdecea;
+      color: var(--bad);
+    }
+
+    .correct {
+      border-color: var(--good) !important;
+      background: #eef9ef !important;
+    }
+
+    .incorrect {
+      border-color: var(--bad) !important;
+      background: #fff1f3 !important;
+    }
+
+    .teacher-notes {
+      margin-top: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .teacher-notes summary {
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--green);
+    }
+
+    .teacher-notes li {
+      margin: 6px 0;
+    }
+
+
+    .confetti-piece {
+      position: fixed;
+      top: -12px;
+      width: 10px;
+      height: 14px;
+      opacity: .9;
+      z-index: 9999;
+      pointer-events: none;
+      animation: confetti-fall 2.4s linear forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      100% {
+        transform: translateY(105vh) rotate(720deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Operating System Management: Drag-and-Drop Review</h1>
+    <p>Match each operating system task to the type of management it best represents.</p>
+  </header>
+  <main>
+    <section class="directions">
+      <strong>Directions:</strong> Move each card from the Word Bank to its matching category. After all cards are
+      placed, select <strong>Check Answers</strong> to unlock the secret keyword.
+    </section>
+
+    <div id="keywordBanner"
+      style="display:none;margin:0 0 18px 0;padding:18px;border-radius:12px;background:#fff8e1;border:2px solid #f9a825;color:#5d4037;font-size:26px;font-weight:bold;text-align:center;">
+      <span id="keywordText"></span></div>
+
+    <section class="layout">
+      <div class="bank" aria-label="Word bank">
+        <h2>Word Bank</h2>
+        <div id="cards"></div>
+      </div>
+      <div class="zones">
+        <h2>Drop Zones</h2>
+        <div class="zones-grid">
+          <div class="zone" data-zone="device">
+            <h3>Device Management</h3>
+            <p>Tracks connected hardware and uses drivers.</p>
+          </div>
+          <div class="zone" data-zone="task">
+            <h3>Task & Process Management</h3>
+            <p>Controls running programs and processes.</p>
+          </div>
+          <div class="zone" data-zone="memory">
+            <h3>Memory Management</h3>
+            <p>Assigns and releases RAM for active processes.</p>
+          </div>
+          <div class="zone" data-zone="storage">
+            <h3>File, Disk & Storage Management</h3>
+            <p>Organizes files, folders, drives, and file systems.</p>
+          </div>
+          <div class="zone" data-zone="services">
+            <h3>Service Management</h3>
+            <p>Controls background services that run automatically.</p>
+          </div>
+          <div class="zone" data-zone="access">
+            <h3>Access Control</h3>
+            <p>Manages sign-in, users, and permissions.</p>
+          </div>
+        </div>
+        <div class="controls">
+          <button onclick="checkAnswers()">Check Answers</button>
+          <button class="secondary" onclick="resetActivity()">Reset</button>
+        </div>
+        <div id="feedback" role="status"></div>
+      </div>
+    </section>
+
+  </main>
+  <script>
+    const items = [
+      { text: 'Detects a printer, keyboard, or USB device connected to the computer.', zone: 'device' },
+      { text: 'Allows a word processor to check spelling while the user keeps typing.', zone: 'task' },
+      { text: 'Releases memory after a task no longer needs it.', zone: 'memory' },
+      { text: 'Creates, opens, renames, or deletes files and folders.', zone: 'storage' },
+      { text: 'Starts, stops, configures, or monitors background services.', zone: 'services' },
+      { text: 'Gives an administrator full access but limits a standard user from system-level changes.', zone: 'access' }
+    ];
+    let dragged = null;
+    let celebrationShown = false;
+    function shuffle(a) { return a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]); }
+    function makeCard(item, i) {
+      const c = document.createElement('div'); c.className = 'card'; c.draggable = true; c.tabIndex = 0; c.id = 'card-' + i; c.dataset.answer = item.zone; c.textContent = item.text;
+      c.addEventListener('dragstart', () => { dragged = c; setTimeout(() => c.style.opacity = .55, 0) });
+      c.addEventListener('dragend', () => { c.style.opacity = 1; dragged = null });
+      return c;
+    }
+    function init() {
+      const bank = document.getElementById('cards'); bank.innerHTML = '';
+      document.querySelectorAll('.zone .card').forEach(c => c.remove());
+      shuffle(items).forEach((item, i) => bank.appendChild(makeCard(item, i)));
+      document.getElementById('feedback').style.display = 'none';
+      document.getElementById('keywordBanner').style.display = 'none';
+      celebrationShown = false;
+      document.getElementById('keywordBanner').style.display = 'none';
+      document.querySelectorAll('.zone').forEach(z => z.classList.remove('correct', 'incorrect'));
+    }
+    document.querySelectorAll('.zone, #cards').forEach(target => {
+      target.addEventListener('dragover', e => { e.preventDefault(); target.classList?.add('over'); });
+      target.addEventListener('dragleave', () => target.classList?.remove('over'));
+      target.addEventListener('drop', e => { e.preventDefault(); target.classList?.remove('over'); if (dragged) target.appendChild(dragged); });
+    });
+
+
+    function revealKeyword() {
+      const encoded = "VG9ydmFsZHM=";
+      const keyword = atob(encoded);
+      document.getElementById('keywordText').textContent = "Keyword Unlocked: " + keyword;
+    }
+
+    function launchConfetti() {
+      const colors = ['#2f5f2a', '#f9a825', '#1976d2', '#c2185b', '#7b1fa2', '#ef6c00'];
+      for (let i = 0; i < 90; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = (Math.random() * 0.5) + 's';
+        piece.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 3000);
+      }
+    }
+
+    function checkAnswers() {
+      let total = items.length, correct = 0;
+      document.querySelectorAll('.zone').forEach(zone => {
+        zone.classList.remove('correct', 'incorrect');
+        let cards = [...zone.querySelectorAll('.card')];
+        cards.forEach(c => { c.classList.remove('correct', 'incorrect'); if (c.dataset.answer === zone.dataset.zone) { c.classList.add('correct'); correct++; } else { c.classList.add('incorrect'); } });
+      });
+      const fb = document.getElementById('feedback');
+      const banner = document.getElementById('keywordBanner');
+      if (correct === total) {
+        fb.className = 'good';
+        fb.textContent = `Great job! ${correct}/${total} correct.`;
+        revealKeyword(); banner.style.display = 'block';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (!celebrationShown) {
+          launchConfetti();
+          celebrationShown = true;
+        }
+      } else {
+        fb.className = 'bad';
+        fb.textContent = `You have ${correct}/${total} correct. Review the highlighted cards and try again.`;
+        banner.style.display = 'none';
+      }
+    }
+    function resetActivity() { init(); }
+    function showAnswers() {
+      document.querySelectorAll('.card').forEach(c => document.querySelector(`.zone[data-zone="${c.dataset.answer}"]`).appendChild(c));
+      checkAnswers();
+    }
+    init();
+  </script>
 </body>
+
 </html>
